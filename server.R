@@ -27,7 +27,7 @@ shinyServer(function(input, output) {
     
     endpoint <- "http://statistics.gov.scot/sparql"
     
-    query <- "PREFIX dcat: <http://www.w3.org/ns/dcat#>
+    query <- paste0("PREFIX dcat: <http://www.w3.org/ns/dcat#>
     PREFIX dcterms: <http://purl.org/dc/terms/>
     PREFIX owl: <http://www.w3.org/2002/07/owl#>
     PREFIX qb: <http://purl.org/linked-data/cube#>
@@ -54,11 +54,13 @@ shinyServer(function(input, output) {
     
     UNION
     
-    {<http://statistics.gov.scot/id/postcodeunit/AB101AB> <http://statistics.gov.scot/def/postcode/dataZone2011> ?refArea }
+                    {<http://statistics.gov.scot/id/postcodeunit/",
+                    input$postcode,
+"> <http://statistics.gov.scot/def/postcode/dataZone2011> ?refArea }
     
     }
     
-    ORDER BY ?refAreaCollection_label ?refArea_label ?year_label"
+    ORDER BY ?refAreaCollection_label ?refArea_label ?year_label")
 
     house_prices_result <- SPARQL(endpoint,query)
     
