@@ -19,7 +19,15 @@ shinyUI(fluidPage(
   sidebarLayout(
     sidebarPanel(textInput(inputId = "postcode", label = "Enter postcode:",
                            value = "AB101AB", width = NULL, placeholder = NULL),
-                 actionButton("go", "Go")
+                 actionButton("go", "Go"),
+                 h3("About this data"),
+                 textOutput("description"),
+                 h4("Date issued:"),
+                 textOutput("dateIssued"),
+                 h4("Date modified:"),
+                 textOutput("dateModified"),
+                 h4("Next update due:"),
+                 textOutput("nextUpdateDue")
        ),
     
     # Show a plot of the generated distribution

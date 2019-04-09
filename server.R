@@ -15,6 +15,47 @@ shinyServer(function(input, output) {
   postCode <- eventReactive(input$go, {
     toupper(gsub(" ", "", input$postcode, fixed = TRUE))
   })
+    
+    query_metadata <- "SELECT *
+      WHERE {
+        <http://statistics.gov.scot/data/house-sales-prices> ?predicate ?object
+      }"
+  
+  house_prices_metadata <- SPARQL(endpoint, query_metadata)[["results"]]
+  
+  output$description <- renderText({
+    house_prices_description <- house_prices_metadata %>%
+      filter(predicate == "<http://purl.org/dc/terms/description>") %>%
+      select(object) %>%
+      `[`(1, 1)
+  })
+  
+  output$dateIssued <- renderText({
+    house_prices_issued <- house_prices_metadata %>%
+      filter(predicate == "<http://purl.org/dc/terms/issued>") %>%
+      select(object) %>%
+      `[`(1, 1) %>%
+      as.numeric() %>%
+      lubridate::as_datetime(tz="Europe/London") %>%
+      as.character()
+  })
+  
+  output$dateModified <- renderText({
+    house_prices_modified <- house_prices_metadata %>%
+      filter(predicate == "<http://purl.org/dc/terms/modified>") %>%
+      select(object) %>%
+      `[`(1, 1) %>%
+      as.numeric() %>%
+      lubridate::as_datetime(tz="Europe/London") %>%
+      as.character()
+  })
+  
+  output$nextUpdateDue <- renderText({
+    house_prices_nextUpdateDue <- house_prices_metadata %>%
+      filter(predicate == "<http://publishmydata.com/def/dataset#nextUpdateDue>") %>%
+      select(object) %>%
+      `[`(1, 1)
+  })
   
   output$distPlot <- renderPlot({
     
