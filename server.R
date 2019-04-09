@@ -12,6 +12,10 @@ library(shiny)
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
    
+  postCode <- eventReactive(input$go, {
+    input$postcode
+  })
+  
   output$distPlot <- renderPlot({
     
     # generate bins based on input$bins from ui.R
@@ -55,7 +59,7 @@ shinyServer(function(input, output) {
     UNION
     
                     {<http://statistics.gov.scot/id/postcodeunit/",
-                    input$postcode,
+                    postCode(),
 "> <http://statistics.gov.scot/def/postcode/dataZone2011> ?refArea }
     
     }

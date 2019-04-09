@@ -18,7 +18,8 @@ shinyUI(fluidPage(
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
     sidebarPanel(textInput(inputId = "postcode", label = "Enter a postcode:",
-                           value = "AB101AB", width = NULL, placeholder = NULL)
+                           value = "AB101AB", width = NULL, placeholder = NULL),
+                 actionButton("go", "Go")
        ),
     
     # Show a plot of the generated distribution
