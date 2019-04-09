@@ -70,9 +70,18 @@ shinyServer(function(input, output) {
     house_prices_councils <- house_prices %>%
       filter(refAreaCollection_label == "Council Areas")
     
-    ggplot(data = house_prices_councils, mapping = aes(x = year_label, y = median, colour = refArea_label)) +
-      geom_line()
+    house_prices_dz <- house_prices %>%
+      filter(refAreaCollection_label == "2011 Data Zones")
     
+    house_prices_scotland <- house_prices %>%
+      filter(refAreaCollection_label == "Countries")
+    
+    ggplot(data = house_prices_councils, mapping = aes(x = year_label,
+                                                       y = median,
+                                                       group = refArea_label)) +
+      geom_line(colour = "grey") +
+      geom_line(data = house_prices_dz, size = 1.7) +
+      geom_line(data = house_prices_scotland)
   })
   
 })
