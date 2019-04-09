@@ -13,7 +13,7 @@ library(shiny)
 shinyServer(function(input, output) {
    
   postCode <- eventReactive(input$go, {
-    input$postcode
+    toupper(gsub(" ", "", input$postcode, fixed = TRUE))
   })
   
   output$distPlot <- renderPlot({
