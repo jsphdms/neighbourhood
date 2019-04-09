@@ -147,7 +147,7 @@ shinyServer(function(input, output) {
                 hjust = "left", size = 5) +
       labs(title = "Median price",
            subtitle = "Scotland, councils, and your area (2011 data zone)") +
-      scale_x_continuous(breaks = c(1993, 2017), limits = c(1993, 2022)) +
+      scale_x_continuous(breaks = c(1993, 2017), limits = c(1993, 2030)) +
       scale_y_continuous(labels = scales::comma) +
       theme(
         # Declutter
