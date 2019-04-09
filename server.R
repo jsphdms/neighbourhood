@@ -11,6 +11,12 @@ library(shiny)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
+  
+  library(ggplot2)
+  library(SPARQL)
+  library(dplyr)
+  
+  endpoint <- "http://statistics.gov.scot/sparql"
    
   postCode <- eventReactive(input$go, {
     toupper(gsub(" ", "", input$postcode, fixed = TRUE))
@@ -21,7 +27,7 @@ shinyServer(function(input, output) {
         <http://statistics.gov.scot/data/house-sales-prices> ?predicate ?object
       }"
   
-  house_prices_metadata <- SPARQL(endpoint, query_metadata)[["results"]]
+  house_prices_metadata <- SPARQL::SPARQL(endpoint, query_metadata)[["results"]]
   
   output$description <- renderText({
     house_prices_description <- house_prices_metadata %>%
@@ -66,12 +72,6 @@ shinyServer(function(input, output) {
     # draw the histogram with the specified number of bins
     # hist(x, breaks = bins, col = 'darkgray', border = 'white')
     
-    library(ggplot2)
-    library(SPARQL)
-    library(dplyr)
-    
-    endpoint <- "http://statistics.gov.scot/sparql"
-    
     query <- paste0("PREFIX dcat: <http://www.w3.org/ns/dcat#>
     PREFIX dcterms: <http://purl.org/dc/terms/>
     PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -107,7 +107,7 @@ shinyServer(function(input, output) {
     
     ORDER BY ?refAreaCollection_label ?refArea_label ?year_label")
 
-    house_prices_result <- SPARQL(endpoint,query)
+    house_prices_result <- SPARQL::SPARQL(endpoint,query)
     
     house_prices <- house_prices_result[["results"]] %>%
       mutate(year_label = as.integer(year_label))
@@ -145,6 +145,8 @@ shinyServer(function(input, output) {
       geom_text(data = geom_text_data,
                 mapping = aes(label = refArea_label), nudge_x = 0.5,
                 hjust = "left", size = 5) +
+      labs(title = "Median price",
+           subtitle = "Scotland, councils, and your area (2011 data zone)") +
       scale_x_continuous(breaks = c(1993, 2017), limits = c(1993, 2022)) +
       scale_y_continuous(labels = scales::comma) +
       theme(
