@@ -74,18 +74,48 @@ shinyServer(function(input, output) {
     house_prices_councils <- house_prices %>%
       filter(refAreaCollection_label == "Council Areas")
     
+    house_prices_councils_top <- house_prices_councils %>%
+      filter(year_label == 2017) %>%
+      top_n(n = 1, wt = median)
+    
+    house_prices_councils_bottom <- house_prices_councils %>%
+      filter(year_label == 2017) %>%
+      top_n(n = 1, wt = -median)
+      
     house_prices_dz <- house_prices %>%
       filter(refAreaCollection_label == "2011 Data Zones")
     
     house_prices_scotland <- house_prices %>%
       filter(refAreaCollection_label == "Countries")
     
+    geom_text_data <- rbind(
+      house_prices_scotland[house_prices_scotland[["year_label"]] == 2017,],
+      house_prices_dz[house_prices_dz[["year_label"]] == 2017,],
+      house_prices_councils_top,
+      house_prices_councils_bottom
+    )
+    
     ggplot(data = house_prices_councils, mapping = aes(x = year_label,
                                                        y = median,
                                                        group = refArea_label)) +
       geom_line(colour = "grey") +
       geom_line(data = house_prices_dz, size = 1.7) +
-      geom_line(data = house_prices_scotland)
+      geom_line(data = house_prices_scotland) +
+      geom_text(data = geom_text_data,
+                mapping = aes(label = refArea_label), nudge_x = 0.5,
+                hjust = "left", size = 5) +
+      scale_x_continuous(breaks = c(1993, 2017), limits = c(1993, 2022)) +
+      scale_y_continuous(labels = scales::comma) +
+      theme(
+        # Declutter
+        panel.background = ggplot2::element_blank(),
+        legend.position = "none",
+        axis.title = ggplot2::element_blank(),
+        axis.ticks = element_blank(),
+        
+        # Text
+        text = element_text(family = "Segoe UI", size = 16))
+      
   })
   
 })

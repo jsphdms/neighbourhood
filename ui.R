@@ -13,11 +13,11 @@ library(shiny)
 shinyUI(fluidPage(
   
   # Application title
-  titlePanel("Old Faithful Geyser Data"),
+  titlePanel("Property price trends in your area"),
   
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
-    sidebarPanel(textInput(inputId = "postcode", label = "Enter a postcode:",
+    sidebarPanel(textInput(inputId = "postcode", label = "Enter postcode:",
                            value = "AB101AB", width = NULL, placeholder = NULL),
                  actionButton("go", "Go")
        ),
